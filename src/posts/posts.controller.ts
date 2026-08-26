@@ -12,6 +12,7 @@ import { CreatePostDto } from './dtos/create-post.dto';
 import { InsertPostType, SelectPostType } from '../database/types/post.type';
 import { SelectUserType } from '../database/types/user.type';
 import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
+import { SelectPostAuthorType } from '../database/types/post_author.type';
 
 @Controller('api/posts')
 export class PostsController {
@@ -35,7 +36,7 @@ export class PostsController {
   @HttpCode(HttpStatus.OK)
   async findAllPosts() {
     // call the fetch all posts service
-    const fetchedPosts: { users: SelectUserType; posts: SelectPostType }[] =
+    const fetchedPosts: SelectPostAuthorType[] =
       await this.postsService.findAllPosts();
 
     return {
@@ -47,9 +48,9 @@ export class PostsController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findUserById(@Param() findPostByIdDto: FindPostByIdDto) {
+  async findPostById(@Param() findPostByIdDto: FindPostByIdDto) {
     // call the fetch post by id service
-    const fetchedPost: { users: SelectUserType; posts: SelectPostType } =
+    const fetchedPost: SelectPostAuthorType =
       await this.postsService.findPostById(findPostByIdDto);
 
     return {
