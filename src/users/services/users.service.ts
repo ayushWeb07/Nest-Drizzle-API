@@ -1,12 +1,18 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
-import { DRIZZLE } from '../database/constants';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { DRIZZLE } from '../../database/constants';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import * as schema from '../database/schemas/index';
+import * as schema from '../../database/schemas/index';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { users } from '../../database/schemas';
 import { eq } from 'drizzle-orm';
 import { CheckEmailExistsDto } from '../dtos/check-email-exists.dto';
-import { InsertUserType } from '../../database/types/user.type';
+import { InsertUserType, SelectUserType } from '../../database/types/user.type';
+import { FindUserByIdDto } from '../dtos/find-user-by-id.dto';
 
 @Injectable()
 export class UsersService {
@@ -51,7 +57,24 @@ export class UsersService {
     return newUser;
   }
 
-  async findAllUsers() {}
+  async findAllUsers(): Promise<SelectUserType[]> {
+    // query the users from the db
+    return await this.db.select().from(users);
+  }
 
-  async findUserById() {}
+  async findUserById(
+    findUserByIdDto: FindUserByIdDto,
+  ): Promise<SelectUserType> {
+    // query the user from the db
+    const [fetchedUser] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.id, findUserByIdDto.id));
+
+    if (!fetchedUser) {
+      throw new NotFoundException('User with such id does not exist');
+    }
+
+    return fetchedUser;
+  }
 }
