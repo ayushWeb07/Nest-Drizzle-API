@@ -31,5 +31,6 @@ import { drizzle } from 'drizzle-orm/node-postgres';
       },
     },
   ],
+  exports: [DRIZZLE],
 })
 export class DatabaseModule {}

@@ -1,9 +1,9 @@
-import { IsEmail, IsNotEmpty, IsString, Max } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Max, MaxLength } from 'class-validator';
 
 export class CheckEmailExistsDto {
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  @Max(100)
+  @MaxLength(100)
   email: string;
 }

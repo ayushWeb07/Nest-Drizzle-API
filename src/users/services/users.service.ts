@@ -13,6 +13,7 @@ import { eq } from 'drizzle-orm';
 import { CheckEmailExistsDto } from '../dtos/check-email-exists.dto';
 import { InsertUserType, SelectUserType } from '../../database/types/user.type';
 import { FindUserByIdDto } from '../dtos/find-user-by-id.dto';
+import { DeleteUserDto } from '../dtos/delete-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -76,5 +77,20 @@ export class UsersService {
     }
 
     return fetchedUser;
+  }
+
+  async deleteUser(deleteUserDto: DeleteUserDto): Promise<void> {
+    // query the user from the db
+    const [fetchedUser] = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, deleteUserDto.id));
+
+    if (!fetchedUser) {
+      throw new NotFoundException('User with such id does not exist');
+    }
+
+    // delete the user
+    await this.db.delete(users).where(eq(users.id, deleteUserDto.id));
   }
 }

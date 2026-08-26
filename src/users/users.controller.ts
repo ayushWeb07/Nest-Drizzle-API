@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -11,6 +12,7 @@ import { UsersService } from './services/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { InsertUserType, SelectUserType } from '../database/types/user.type';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
+import { DeleteUserDto } from './dtos/delete-user.dto';
 
 @Controller('api/users')
 export class UsersController {
@@ -55,6 +57,18 @@ export class UsersController {
       success: true,
       message: 'Successfully fetched the user by id',
       data: fetchedUser,
+    };
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async deleteUser(@Param() deleteUserDto: DeleteUserDto) {
+    // call the delete user service
+    await this.usersService.deleteUser(deleteUserDto);
+
+    return {
+      success: true,
+      message: 'Successfully deleted the user by id',
     };
   }
 }
