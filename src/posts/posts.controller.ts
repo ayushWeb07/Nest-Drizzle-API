@@ -1,4 +1,61 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
+import { PostsService } from './services/posts.service';
+import { CreatePostDto } from './dtos/create-post.dto';
+import { InsertPostType, SelectPostType } from '../database/types/post.type';
+import { SelectUserType } from '../database/types/user.type';
+import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
 
-@Controller('posts')
-export class PostsController {}
+@Controller('api/posts')
+export class PostsController {
+  constructor(private readonly postsService: PostsService) {}
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async createPost(@Body() createPostDto: CreatePostDto) {
+    // call the create post service
+    const newPost: InsertPostType =
+      await this.postsService.createPost(createPostDto);
+
+    return {
+      success: true,
+      message: 'Successfully created the new post',
+      data: newPost,
+    };
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async findAllPosts() {
+    // call the fetch all posts service
+    const fetchedPosts: { users: SelectUserType; posts: SelectPostType }[] =
+      await this.postsService.findAllPosts();
+
+    return {
+      success: true,
+      message: 'Successfully fetched all the posts',
+      data: fetchedPosts,
+    };
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async findUserById(@Param() findPostByIdDto: FindPostByIdDto) {
+    // call the fetch post by id service
+    const fetchedPost: { users: SelectUserType; posts: SelectPostType } =
+      await this.postsService.findPostById(findPostByIdDto);
+
+    return {
+      success: true,
+      message: 'Successfully fetched the post by id',
+      data: fetchedPost,
+    };
+  }
+}
