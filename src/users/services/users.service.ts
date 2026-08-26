@@ -14,6 +14,7 @@ import { CheckEmailExistsDto } from '../dtos/check-email-exists.dto';
 import { InsertUserType, SelectUserType } from '../../database/types/user.type';
 import { FindUserByIdDto } from '../dtos/find-user-by-id.dto';
 import { DeleteUserDto } from '../dtos/delete-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -77,6 +78,24 @@ export class UsersService {
     }
 
     return fetchedUser;
+  }
+
+  async updateUser(updateUserDto: UpdateUserDto): Promise<void> {
+    // query the user from the db
+    const [fetchedUser] = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, updateUserDto.id));
+
+    if (!fetchedUser) {
+      throw new NotFoundException('User with such id does not exist');
+    }
+
+    // update the user
+    await this.db
+      .update(users)
+      .set({ ...updateUserDto })
+      .where(eq(users.id, updateUserDto.id));
   }
 
   async deleteUser(deleteUserDto: DeleteUserDto): Promise<void> {

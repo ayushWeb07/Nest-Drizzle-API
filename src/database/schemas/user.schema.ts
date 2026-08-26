@@ -9,5 +9,5 @@ export const users = pgTable('users', {
   updatedAt: timestamp('updated_at', { mode: 'string' })
     .notNull()
     .defaultNow()
-    .$onUpdate(() => new Date().toString()),
+    .$onUpdate(() => new Date().toISOString()),
 });

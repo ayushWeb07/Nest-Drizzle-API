@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { UsersService } from './services/users.service';
@@ -13,6 +14,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { InsertUserType, SelectUserType } from '../database/types/user.type';
 import { FindUserByIdDto } from './dtos/find-user-by-id.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('api/users')
 export class UsersController {
@@ -57,6 +59,18 @@ export class UsersController {
       success: true,
       message: 'Successfully fetched the user by id',
       data: fetchedUser,
+    };
+  }
+
+  @Patch()
+  @HttpCode(HttpStatus.OK)
+  async updateUser(@Body() updateUserDto: UpdateUserDto) {
+    // call the update user service
+    await this.usersService.updateUser(updateUserDto);
+
+    return {
+      success: true,
+      message: 'Successfully updated the user',
     };
   }
 
