@@ -2,7 +2,6 @@ import { pgTable, integer } from 'drizzle-orm/pg-core';
 import { posts } from './post.schema';
 import { categories } from './category.schema';
 import { relations } from 'drizzle-orm';
-import { users } from './user.schema';
 
 export const postCategories = pgTable('post_categories', {
   postId: integer('post_id')
