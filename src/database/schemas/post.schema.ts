@@ -8,6 +8,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { users } from './user.schema';
 import { relations } from 'drizzle-orm';
+import { categories } from './category.schema';
 
 export const posts = pgTable('posts', {
   id: serial('id').primaryKey(),
@@ -24,9 +25,10 @@ export const posts = pgTable('posts', {
     .$onUpdate(() => new Date().toISOString()),
 });
 
-export const postsRelations = relations(posts, ({ one }) => ({
+export const postsRelations = relations(posts, ({ many, one }) => ({
   author: one(users, {
     fields: [posts.authorId],
     references: [users.id],
   }),
+  categories: many(categories),
 }));
