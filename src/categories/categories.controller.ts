@@ -14,6 +14,7 @@ import {
   SelectCategoryType,
 } from '../database/types/category.type';
 import { FindCategoryByIdDto } from './dtos/find-category-by-id.dto';
+import { AssignCategoryToPostDto } from '../posts/dtos/assign-category-to-post.dto';
 
 @Controller('api/categories')
 export class CategoriesController {
@@ -30,6 +31,20 @@ export class CategoriesController {
       success: true,
       message: 'Successfully created the new category',
       data: newCategory,
+    };
+  }
+
+  @Post('assign-post')
+  @HttpCode(HttpStatus.OK)
+  async assignCategoryToPost(
+    @Body() assignCategoryToPostDto: AssignCategoryToPostDto,
+  ) {
+    // call the create category service
+    await this.categoriesService.assignCategoryToPost(assignCategoryToPostDto);
+
+    return {
+      success: true,
+      message: 'Successfully assigned the category to the post',
     };
   }
 
