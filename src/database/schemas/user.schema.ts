@@ -1,6 +1,7 @@
 import { pgTable, varchar, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { posts } from './post.schema';
+import { profiles } from './profile.schema';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -14,6 +15,7 @@ export const users = pgTable('users', {
     .$onUpdate(() => new Date().toISOString()),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   posts: many(posts),
+  profile: one(profiles),
 }));
