@@ -35,8 +35,7 @@ export class PostsController {
   @HttpCode(HttpStatus.OK)
   async findAllPosts() {
     // call the fetch all posts service
-    const fetchedPosts: SelectPostAuthorType[] =
-      await this.postsService.findAllPosts();
+    const fetchedPosts = await this.postsService.findAllPosts();
 
     return {
       success: true,

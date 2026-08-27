@@ -1,0 +1,1 @@
+ALTER TABLE "post_categories" ADD COLUMN "id" serial PRIMARY KEY NOT NULL;

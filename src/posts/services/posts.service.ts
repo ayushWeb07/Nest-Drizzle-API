@@ -2,7 +2,12 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DRIZZLE } from '../../database/constants';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '../../database/schemas';
-import { posts, users } from '../../database/schemas';
+import {
+  categories,
+  postCategories,
+  posts,
+  users,
+} from '../../database/schemas';
 import { eq, getTableColumns } from 'drizzle-orm';
 import { FindPostByIdDto } from '../dtos/find-post-by-id.dto';
 import { CreatePostDto } from '../dtos/create-post.dto';
@@ -34,17 +39,20 @@ export class PostsService {
     return newPost;
   }
 
-  async findAllPosts(): Promise<SelectPostAuthorType[]> {
-    // query the users from the db
+  async findAllPosts() {
+    // query the posts from the db
     return await this.db
       .select({
         ...getTableColumns(posts),
         author: {
           ...getTableColumns(users),
         },
+        allCategories: { ...getTableColumns(categories) },
       })
       .from(posts)
-      .innerJoin(users, eq(posts.authorId, users.id));
+      .innerJoin(users, eq(posts.authorId, users.id))
+      .innerJoin(postCategories, eq(posts.id, postCategories.postId))
+      .innerJoin(categories, eq(postCategories.categoryId, categories.id));
   }
 
   async findPostById(
