@@ -9,8 +9,7 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './services/posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
-import { InsertPostType, SelectPostType } from '../database/types/post.type';
-import { SelectUserType } from '../database/types/user.type';
+import { InsertPostType } from '../database/types/post.type';
 import { FindPostByIdDto } from './dtos/find-post-by-id.dto';
 import { SelectPostAuthorType } from '../database/types/post_author.type';
 
